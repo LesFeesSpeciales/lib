@@ -1,3 +1,19 @@
+"""
+log.py
+Simple script based on logging python lib ( https://docs.python.org/2/library/logging.html )
+That print a specifiq loggin formatte
+
+# Usage :
+debug = True
+log = getLogger('yourAppName', debug)
+log.info("Starting app")
+log.info("Debug level %s" % log.level)
+log.warning("Wrong name")
+log.error("Error while doing something")
+log.critical("Critical error, stopping now")
+getDeltaToStart(log) # return time elapsed since the log creation
+"""
+
 import logging
 from datetime import datetime
 

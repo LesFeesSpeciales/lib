@@ -5,9 +5,6 @@ File discribing our naming conventions
 import os
 import re
 
-if __name__ == "__main__":
-    import sys
-    sys.path.append("/u/lib/python3x")
 
 
 from kabaret.naming import (
@@ -20,6 +17,15 @@ from kabaret.naming import (
 # Fields
 #
 
+# Film fields
+
+# LIb Fields
+
+class Lib(Field):
+    pass
+    
+# Root fields
+
 class Project(Field):
     pass
 
@@ -30,14 +36,28 @@ class Store(Field):
 # Project and Store
 #
 
+# FILM Folders
+
+# LIB Folders
+
+class LibFolder(PathItem):
+    NAME = Lib
+    CHILD_CLASSES = ()
+
+# Root folders
+
 class ProjectFolder(PathItem):
     NAME = Project
-    CHILD_CLASSES = ()
+    CHILD_CLASSES = (LibFolder,)
 
 class StoreFolder(PathItem):
     NAME = Store
     CHILD_CLASSES = (ProjectFolder,)
 
+
+#
+# TESTS
+#
 
 if __name__ == "__main__":
     import log as logger

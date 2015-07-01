@@ -15,19 +15,20 @@ from kabaret.naming import (
 
 
 """
-
-FILM/
-    SEQ/
-        SHOT/
-            Dept/
-                FILM_SEQ_Shot-Dept/
-                    FILM_SEQ_Shot-Dept-SubTypes-Version.ext
-LIB/
-    FAMILY/
-        ASSET/
-            Dept/
-                LIB_FAMILY_Asset-Dept/
-                    LIB_FAMILY_Asset-Dept-SubTypes-Version.ext
+RootDrive/
+    Project/
+        FILM/
+            SEQ/
+                SHOT/
+                    Dept/
+                        FILM_SEQ_Shot-Dept/
+                            FILM_SEQ_Shot-Dept-SubTypes-Version.ext
+        LIB/
+            FAMILY/
+                ASSET/
+                    Dept/
+                        LIB_FAMILY_Asset-Dept/
+                            LIB_FAMILY_Asset-Dept-SubTypes-Version.ext
 
                 
 

@@ -13,9 +13,16 @@ from kabaret.naming import (
     PathItem
 )
 
+"""
+TODO
+####
+
+  * Ajouter root libre
+"""
+
 
 """
-RootDrive/
+Store/
     Project/
         FILM/
             SEQ/
@@ -217,9 +224,25 @@ class ProjectFolder(PathItem):
     NAME = Project
     CHILD_CLASSES = (LibFolder, FilmFolder)
 
+
 class StoreFolder(PathItem):
     NAME = Store
     CHILD_CLASSES = (ProjectFolder,)
+
+    
+    @classmethod
+    def from_path(cls, path, root=None):
+        if root:
+            remaining_path = path.replace(root, '')
+            print(remaining_path)
+            item = cls.from_name(root)
+            return item / remaining_path
+        else:
+            store, remaining_path = path.split("/", 1)
+            item = cls.from_name(store)
+            return item/remaining_path
+
+
 
 
 #
@@ -228,11 +251,10 @@ class StoreFolder(PathItem):
 
 if __name__ == "__main__":
     import log as logger
+    n = StoreFolder.from_path("C:/titi/toto/projet/FILM/Seq01/Plan02/Anim", "C:/titi/toto/")
+    print(n.config())
 
-    log = logger.getLogger("naming")
-    log.info("Naming test of %s" % __file__)
-    log.info("Sarting tests")
-
+    exit()
     store = StoreFolder.from_name('Projets')
     project = store / 'herakles/LIB/Chars/Flavio/Mod_OK/LIB_Chars_Flavio-Mod_OK/LIB_Chars_Flavio-Mod_OK-TypeA_TypeB-v01.blend'
 
@@ -251,5 +273,5 @@ if __name__ == "__main__":
     if project.is_wild():
         print(project.why())
 
-    log.info(logger.getDeltaToStart(log))
+
     

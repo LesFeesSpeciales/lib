@@ -16,8 +16,8 @@ from kabaret.naming import (
 """
 TODO
 ####
+Fonction de detection du store ?
 
-  * Ajouter root libre
 """
 
 
@@ -29,13 +29,19 @@ Store/
                 SHOT/
                     Dept/
                         FILM_SEQ_Shot-Dept/
-                            FILM_SEQ_Shot-Dept-SubTypes-Version.ext
+                            FILM_SEQ_Shot-Dept-SubTypes-Version.frame.ext
+                                                  |       |       |> optional
+                                                  |       |> optional
+                                                  |> optional
         LIB/
             FAMILY/
                 ASSET/
                     Dept/
                         LIB_FAMILY_Asset-Dept/
-                            LIB_FAMILY_Asset-Dept-SubTypes-Version.ext
+                            LIB_FAMILY_Asset-Dept-SubTypes-Version.frame.ext
+                                                     |       |       |> optional
+                                                     |       |> optional
+                                                     |> optional
 
                 
 
@@ -83,6 +89,10 @@ class SubTypes(MultipleFields):
 class Edit(FixedField):
     fixed_value = "EDIT"
 
+class Frame(Field):
+    def validate(self):
+        super(Frame, self).validate()
+        if not self._value.isdigit(): raise FieldValueError("Value %s uses a non authorized character (only 0->9)" % self._value)
 
 
 # Film fields
@@ -115,7 +125,11 @@ class ShotTaskFull(CompoundField):
     separator = '-'    
 
 class ShotTaskFile(CompoundField):
-    fields = (ShotTaskFull, Extension)
+    fields = (ShotTaskFull,  Extension)
+    separator = '.'
+
+class ShotTaskFileWithFrameNumber(CompoundField):
+    fields = (ShotTaskFull, Frame, Extension)
     separator = '.'
 
 # LIb Fields
@@ -147,6 +161,9 @@ class AssetTaskFile(CompoundField):
     fields = (AssetTaskFull, Extension)
     separator = '.'
 
+class AssetTaskFileWithFrameNumber(CompoundField):
+    fields = (AssetTaskFull, Frame, Extension)
+    separator = '.'
 
 
 
@@ -169,10 +186,13 @@ class ShotRefFile(PathItem):
     NAME = ShotTaskFile
     CHILD_CLASSES = ()
 
+class ShotRefFileWithFrameNumber(PathItem):
+    NAME = ShotTaskFileWithFrameNumber
+    CHILD_CLASSES = ()
 
 class ShotTaskFolder(PathItem):
     NAME = ShotTask
-    CHILD_CLASSES = (ShotRefFile,)
+    CHILD_CLASSES = (ShotRefFileWithFrameNumber,ShotRefFile,)
 
 class ShotDeptFolder(PathItem):
     NAME = Dept
@@ -198,9 +218,13 @@ class AssetRefFile(PathItem):
     NAME = AssetTaskFile
     CHILD_CLASSES = ()
 
+class AssetRefFileWithFrameNumber(PathItem):
+    NAME = AssetTaskFileWithFrameNumber
+    CHILD_CLASSES = ()
+
 class AssetTaskFolder(PathItem):
     NAME = AssetTask 
-    CHILD_CLASSES = (AssetRefFile,)
+    CHILD_CLASSES = (AssetRefFileWithFrameNumber,AssetRefFile,)
 
 class AssetDeptFolder(PathItem):
     NAME = Dept
@@ -252,11 +276,20 @@ class StoreFolder(PathItem):
 if __name__ == "__main__":
     import log as logger
     n = StoreFolder.from_path("C:/titi/toto/projet/FILM/Seq01/Plan02/Anim", "C:/titi/toto/")
-    print(n.config())
+    #print(n.config())
 
-    exit()
+    
     store = StoreFolder.from_name('Projets')
-    project = store / 'herakles/LIB/Chars/Flavio/Mod_OK/LIB_Chars_Flavio-Mod_OK/LIB_Chars_Flavio-Mod_OK-TypeA_TypeB-v01.blend'
+    project = store / 'herakles/LIB/Chars/Flavio/Mod/LIB_Chars_Flavio-Mod/LIB_Chars_Flavio-Mod-TypeA_TypeB-v01.blend'
+
+    #print(project.path())
+    #print(project.config())
+    
+    if project.is_wild():
+        print(project.why())
+
+    store = StoreFolder.from_name('Projets')
+    project = store / 'herakles/HERAKLES/S01/P02/Anim/HERAKLES_S01_P02-Anim/HERAKLES_S01_P02-Anim-TypeA_TypeB-v01.blend'
 
     print(project.path())
     print(project.config())
@@ -264,8 +297,7 @@ if __name__ == "__main__":
     if project.is_wild():
         print(project.why())
 
-    store = StoreFolder.from_name('Projets')
-    project = store / 'herakles/HERAKLES/S01/P02/Anim/HERAKLES_S01_P02-Anim/HERAKLES_S01_P02-Anim-TypeA_TypeB-v01.blend'
+    project = store / 'herakles/HERAKLES/S01/P02/Anim/HERAKLES_S01_P02-Anim/HERAKLES_S01_P02-Anim-TypeA_TypeB.5123.blend'
 
     print(project.path())
     print(project.config())

@@ -267,14 +267,53 @@ class StoreFolder(PathItem):
             return item/remaining_path
 
 
+def guessStore(path, splitLevel = 0):
+    """
+    This function tries to guees the Store path : it's an experiment
+    IF the rest of the path match the needed keys for the config of the remaining path
+    In this example, the rest of the path should be pretty complete as we ask for 
+    a lot of keys
 
+    Return a string if a store is found with a valid config
+    Return None otherwise... (might be a bad path also, not checked)
 
+    Usage :
+    store = guessStore("Path/To/Check")
+    if not store : print("Impossible to guess the root path")
+    """
+    if splitLevel > path.count("/"): return None
+    neededKeys = [
+            ["Project", "Film", "Sequence", "Shot", "Dept"], # OR :
+            ["Project", "Lib", "Asset", "Family", "Dept"]
+        ]
+    
+    try:
+        remainingPath = path.split("/", splitLevel)[-1]
+        store = "/".join(path.split("/", splitLevel)[:-1])
+        if not store: store = "/"
+    except: # End of the line ?
+        return None
+    n =  StoreFolder.from_path(remainingPath, store)
+    if n.is_wild():
+        return guessStore(path, splitLevel +1)
+    else:
+        c = n.config()
+        print(c)
+        for keys in neededKeys:
+            allKeys = True
+            for k in keys:
+                if not k in c : allKeys = None
+            if allKeys :
+                print(n.path())
+                return store
+        return guessStore(path, splitLevel +1)
 #
 # TESTS
 #
 
 if __name__ == "__main__":
-    import log as logger
+    
+   
     n = StoreFolder.from_path("C:/titi/toto/projet/FILM/Seq01/Plan02/Anim", "C:/titi/toto/")
     #print(n.config())
 

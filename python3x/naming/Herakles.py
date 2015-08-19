@@ -281,12 +281,13 @@ def guessStore(path, splitLevel = 0):
     store = guessStore("Path/To/Check")
     if not store : print("Impossible to guess the root path")
     """
-    if splitLevel > path.count("/"): return None
+    
     neededKeys = [
             ["Project", "Film", "Sequence", "Shot", "Dept"], # OR :
             ["Project", "Lib", "Asset", "Family", "Dept"]
         ]
     
+    if splitLevel > path.count("/"): return None # stop reccursivity if there is no more paths to check 
     try:
         remainingPath = path.split("/", splitLevel)[-1]
         store = "/".join(path.split("/", splitLevel)[:-1])
@@ -312,37 +313,41 @@ def guessStore(path, splitLevel = 0):
 #
 
 if __name__ == "__main__":
-    
-   
-    n = StoreFolder.from_path("C:/titi/toto/projet/FILM/Seq01/Plan02/Anim", "C:/titi/toto/")
-    #print(n.config())
+    import sys
 
-    
-    store = StoreFolder.from_name('Projets')
-    project = store / 'herakles/LIB/Chars/Flavio/Mod/LIB_Chars_Flavio-Mod/LIB_Chars_Flavio-Mod-TypeA_TypeB-v01.blend'
+    if not "unittest" in sys.argv:
+        print("Develloping  tests")
+        n = StoreFolder.from_path("C:/titi/toto/projet/FILM/Seq01/Plan02/Anim", "C:/titi/toto/")
+        #print(n.config())
 
-    #print(project.path())
-    #print(project.config())
-    
-    if project.is_wild():
-        print(project.why())
+        
+        store = StoreFolder.from_name('Projets')
+        project = store / 'herakles/LIB/Chars/Flavio/Mod/LIB_Chars_Flavio-Mod/LIB_Chars_Flavio-Mod-TypeA_TypeB-v01.blend'
 
-    store = StoreFolder.from_name('Projets')
-    project = store / 'herakles/HERAKLES/S01/P02/Anim/HERAKLES_S01_P02-Anim/HERAKLES_S01_P02-Anim-TypeA_TypeB-v01.blend'
+        #print(project.path())
+        #print(project.config())
+        
+        if project.is_wild():
+            print(project.why())
 
-    print(project.path())
-    print(project.config())
-    
-    if project.is_wild():
-        print(project.why())
+        store = StoreFolder.from_name('Projets')
+        project = store / 'herakles/HERAKLES/S01/P02/Anim/HERAKLES_S01_P02-Anim/HERAKLES_S01_P02-Anim-TypeA_TypeB-v01.blend'
 
-    project = store / 'herakles/HERAKLES/S01/P02/Anim/HERAKLES_S01_P02-Anim/HERAKLES_S01_P02-Anim-TypeA_TypeB.5123.blend'
+        print(project.path())
+        print(project.config())
+        
+        if project.is_wild():
+            print(project.why())
 
-    print(project.path())
-    print(project.config())
-    
-    if project.is_wild():
-        print(project.why())
+        project = store / 'herakles/HERAKLES/S01/P02/Anim/HERAKLES_S01_P02-Anim/HERAKLES_S01_P02-Anim-TypeA_TypeB.5123.blend'
 
+        print(project.path())
+        print(project.config())
+        
+        if project.is_wild():
+            print(project.why())
+    else:
+         print("Starting unit tests")
+         
 
     

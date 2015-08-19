@@ -2,16 +2,27 @@
 File discribing our naming conventions
 """
 
-import os
+import sys, os
 import re
 
 
+if sys.version_info.major == 3:
+    from kabaret.kabaret3x.naming import (
+        Field, ChoiceField, MultipleFields, CompoundField, IndexingField, FixedField,
+        FieldValueError,
+        PathItem
+    )
 
-from kabaret.naming import (
-    Field, ChoiceField, MultipleFields, CompoundField, IndexingField, FixedField,
-    FieldValueError,
-    PathItem
-)
+elif sys.version_info.major == 2:
+    from kabaret.kabaret.naming import (
+        Field, ChoiceField, MultipleFields, CompoundField, IndexingField, FixedField,
+        FieldValueError,
+        PathItem
+    )
+else:
+  raise ImportError
+
+
 
 """
 TODO
